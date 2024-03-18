@@ -14,4 +14,6 @@ class Workshop {
     private var city = "";
     private var street = "";
     private var phone = "";
+
+
 }

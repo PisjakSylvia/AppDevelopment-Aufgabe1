@@ -1,3 +1,6 @@
+import java.util.*
+import kotlin.collections.ArrayList
+
 class Vehicle {
     private var id = 0
     private var name =  ""
@@ -40,18 +43,27 @@ class Vehicle {
        return speed.toDouble()
     }
 
-    fun drive(kilometers: Int){
-        repeat(kilometers){
+
+    fun drive(kilometers: Int) {
+        val random = Random()
+        val randomBoolean = random.nextBoolean()
+        repeat(kilometers) { _ ->
             val randomCallNumber = (3..5).random()
-            repeat(randomCallNumber){
-                accelerate()
-                brake()
+            repeat(randomCallNumber) {
+                if (randomBoolean) {
+                    accelerate()
+                } else {
+                    brake()
+                }
             }
+            println("Traveled 1 kilometer. Current speed: $speed")
         }
     }
 
+
+
     fun printInfo(){
-        println("Vehicle(id=$id, name='$name', brand=$brand, workshops=$workshops, weight=$weight, maxPermissibleWeight=$maxPermissibleWeight, speed=$speed, maxSpeed=$maxSpeed)")
+        println("Vehicle(id=$id, name='$name', brand=$brand, workshops=$workshops, weight=$weight kg, maxPermissibleWeight=$maxPermissibleWeight kg, speed=$speed km/h, maxSpeed=$maxSpeed km/h)")
     }
 
     fun getWorkshop(postcode: Int): Workshop?{

@@ -24,4 +24,11 @@ fun main(args: Array<String>) {
     println("\nDriving vehicle 3 for 4 kilometers:")
     vehicle3.drive(4)
 
+    val workshopFor9020 = vehicle1.getWorkshop(9020)
+    if (workshopFor9020 != null) {
+        println("Postcode: ${workshopFor9020.postcode}")
+    } else {
+        println("Workshop not found for postcode 9020.")
+    }
+
 }
