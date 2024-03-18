@@ -20,7 +20,7 @@ class Vehicle {
        return speed.toDouble()
     }
 
-    fun drive(kilometers: int){
+    fun drive(kilometers: Int){
         repeat(kilometers){
             val randomCallNumber = (3..5).random()
             repeat(randomCallNumber){
@@ -34,7 +34,7 @@ class Vehicle {
         println("Vehicle(id=$id, name='$name', brand=$brand, workshops=$workshops, weight=$weight, maxPermissibleWeight=$maxPermissibleWeight, speed=$speed, maxSpeed=$maxSpeed)")
     }
 
-    fun getWorkshop(postcode: int): Workshop?{
-        return workshops.find { it.postcode == postcode }
+    fun getWorkshop(postcode: Int): Workshop?{
+        return workshops?.find { it.postcode == postcode }
     }
 }
