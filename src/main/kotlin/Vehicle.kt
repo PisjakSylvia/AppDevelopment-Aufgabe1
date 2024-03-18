@@ -5,8 +5,8 @@ class Vehicle {
     private var workshops: ArrayList<Workshop>? = ArrayList()
     private var weight = 0
     private var maxPermissibleWeight = 0
-    private var speed = 0
-    private var maxSpeed = 0
+    private var speed: Double = 0.0
+    private var maxSpeed: Double = 0.0
 
     constructor(
         id: Int,
@@ -15,8 +15,8 @@ class Vehicle {
         workshops: ArrayList<Workshop>?,
         weight: Int,
         maxPermissibleWeight: Int,
-        speed: Int,
-        maxSpeed: Int
+        speed: Double,
+        maxSpeed: Double
     ) {
         this.id = id
         this.name = name
@@ -36,7 +36,7 @@ class Vehicle {
 
     fun brake(): Double{
        val randomReducedSpeed = (10..50).random()
-       speed = (speed-randomReducedSpeed).coerceAtLeast(0)
+       speed = (speed-randomReducedSpeed).coerceAtLeast(0.0)
        return speed.toDouble()
     }
 
