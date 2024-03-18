@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
     println("\nDriving vehicle 1 for 5 kilometers:")
     vehicle1.drive(5)
     println("\nDriving vehicle 2 for 3 kilometers:")
-    vehicle2.drive(3)
+    vehicle2.drive(5)
     println("\nDriving vehicle 3 for 4 kilometers:")
     vehicle3.drive(4)
 

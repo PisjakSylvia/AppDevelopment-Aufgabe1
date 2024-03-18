@@ -43,11 +43,10 @@ class Vehicle {
        return speed.toDouble()
     }
 
-
     fun drive(kilometers: Int) {
         val random = Random()
-        val randomBoolean = random.nextBoolean()
         repeat(kilometers) { _ ->
+            val randomBoolean = random.nextBoolean()
             val randomCallNumber = (3..5).random()
             repeat(randomCallNumber) {
                 if (randomBoolean) {
@@ -59,6 +58,7 @@ class Vehicle {
             println("Traveled 1 kilometer. Current speed: $speed")
         }
     }
+
 
 
 
