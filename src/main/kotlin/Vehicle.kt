@@ -8,6 +8,26 @@ class Vehicle {
     private var speed = 0
     private var maxSpeed = 0
 
+    constructor(
+        id: Int,
+        name: String,
+        brand: Brand?,
+        workshops: ArrayList<Workshop>?,
+        weight: Int,
+        maxPermissibleWeight: Int,
+        speed: Int,
+        maxSpeed: Int
+    ) {
+        this.id = id
+        this.name = name
+        this.brand = brand
+        this.workshops = workshops
+        this.weight = weight
+        this.maxPermissibleWeight = maxPermissibleWeight
+        this.speed = speed
+        this.maxSpeed = maxSpeed
+    }
+
     fun accelerate(): Double{
         val randomSpeed = (10..50).random()
         speed = (speed + randomSpeed).coerceAtMost(maxSpeed)
