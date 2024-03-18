@@ -30,4 +30,9 @@ class Vehicle {
         }
     }
 
+    fun printInfo(){
+        println("Vehicle(id=$id, name='$name', brand=$brand, workshops=$workshops, weight=$weight, maxPermissibleWeight=$maxPermissibleWeight, speed=$speed, maxSpeed=$maxSpeed)")
+    }
+
+
 }
