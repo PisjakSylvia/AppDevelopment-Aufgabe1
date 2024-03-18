@@ -13,4 +13,10 @@ class Vehicle {
         speed = (speed + randomSpeed).coerceAtMost(maxSpeed)
         return speed.toDouble()
     }
+
+    fun brake(): Double{
+       val randomReducedSpeed = (10..50).random()
+       speed = (speed-randomReducedSpeed).coerceAtLeast(0)
+       return speed.toDouble()
+    }
 }
