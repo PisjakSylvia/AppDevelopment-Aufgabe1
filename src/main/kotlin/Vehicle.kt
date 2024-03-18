@@ -2,7 +2,7 @@ class Vehicle {
     private var id = 0
     private var name =  ""
     private var brand: Brand? = null
-    private var workshops: ArrayList<Workshop> = ArrayList()
+    private var workshops: ArrayList<Workshop>? = ArrayList()
     private var weight = 0
     private var maxPermissibleWeight = 0
     private var speed = 0
@@ -34,5 +34,7 @@ class Vehicle {
         println("Vehicle(id=$id, name='$name', brand=$brand, workshops=$workshops, weight=$weight, maxPermissibleWeight=$maxPermissibleWeight, speed=$speed, maxSpeed=$maxSpeed)")
     }
 
-
+    fun getWorkshop(postcode: int): Workshop?{
+        return workshops.find { it.postcode == postcode }
+    }
 }
