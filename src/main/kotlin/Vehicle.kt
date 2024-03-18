@@ -19,4 +19,15 @@ class Vehicle {
        speed = (speed-randomReducedSpeed).coerceAtLeast(0)
        return speed.toDouble()
     }
+
+    fun drive(kilometers: int){
+        repeat(kilometers){
+            val randomCallNumber = (3..5).random()
+            repeat(randomCallNumber){
+                accelerate()
+                brake()
+            }
+        }
+    }
+
 }
