@@ -1,3 +1,4 @@
+import kotlinx.coroutines.GlobalScope
 import java.util.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -65,9 +66,35 @@ fun main(args: Array<String>) {
     val raceDistance = 5 // Distance of the race in kilometers
 
     println("Starting the race!") // Print message indicating the start of the race
+
+    // Starten der Rennen für vehicle1 und vehicle2 in separaten Coroutines
+    val start1 = GlobalScope.launch { race(MikesCar, raceDistance) }
+    val start2 = GlobalScope.launch { race(MyCar, raceDistance) }
+
+    // Warten, bis beide Renn-Coroutines abgeschlossen sind
     runBlocking {
-        launch { race(MikesCar, raceDistance) } // Launch a coroutine for Mike's car to participate in the race
-        launch { race(MyCar, raceDistance) } // Launch a coroutine for My's car to participate in the race
+        start1.join()
+        start2.join()
+    }
+
+    // Bestimmen des Gewinners basierend auf der zurückgelegten Strecke
+    val winners = mutableListOf<Vehicle>()
+    val maxDistance = maxOf(MikesCar.distanceTraveled, MyCar.distanceTraveled)
+    if (MikesCar.distanceTraveled == maxDistance) {
+        winners.add(MikesCar)
+    }
+    if (MyCar.distanceTraveled == maxDistance) {
+        winners.add(MyCar)
+    }
+
+    // Ausgabe des Gewinners bzw. Gewinner bei Unentschieden
+    if (winners.size == 1) {
+        println("The winner is: ${winners[0].name}")
+    } else if (winners.size > 1) {
+        println("It's a tie between:")
+        winners.forEach { println(it.name) }
+    } else {
+        println("No winner. All vehicles failed to finish the race.")
     }
     println("Race finished!") // Print message indicating the end of the race
 

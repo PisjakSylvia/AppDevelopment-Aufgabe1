@@ -11,7 +11,11 @@ class Vehicle {
     private var maxPermissibleWeight = 0
     private var speed: Double = 0.0
     private var maxSpeed: Double = 0.0
-
+    var distanceTraveled: Int = 0
+        private set
+    fun updateDistanceTraveled(distance: Int) {
+        distanceTraveled += distance
+    }
     constructor(
         id: Int,
         name: String,
