@@ -38,30 +38,37 @@ fun main(args: Array<String>) {
         println("Workshop not found for postcode 9020.")
     }
 
+    /**
+     * Suspended function to simulate a race for a given vehicle and distance.
+     *
+     * @param vehicle The vehicle participating in the race.
+     * @param distance The distance of the race in kilometers.
+     */
     suspend fun race(vehicle: Vehicle, distance: Int) {
-        var traveledDistance = 0
-        val random = Random()
-        val randomBoolean = random.nextBoolean()
-        while (traveledDistance < distance) {
-            val randomCallNumber = (3..5).random()
-            repeat(randomCallNumber) {
-                if (randomBoolean) {
+        var traveledDistance = 0 // Variable to track the distance traveled by the vehicle
+        val random = Random() // Random number generator for randomizing actions
+        val randomBoolean = random.nextBoolean() // Random boolean value for alternating acceleration and braking
+        while (traveledDistance < distance) { // Continue racing until the vehicle has traveled the specified distance
+            val randomCallNumber = (3..5).random() // Random number of actions (acceleration or braking) to perform
+            repeat(randomCallNumber) { // Repeat the random number of actions
+                if (randomBoolean) { // If the random boolean value is true, accelerate the vehicle
                     vehicle.accelerate()
-                } else {
+                } else { // Otherwise, brake the vehicle
                     vehicle.brake()
                 }
-                delay(100) //(in milliseconds)
+                delay(100) // Introduce a delay of 100 milliseconds between actions
             }
-            traveledDistance++
+            traveledDistance++ // Increment the traveled distance after each kilometer
         }
     }
 
-    val raceDistance = 5 // 5 kilometers race distance
+    val raceDistance = 5 // Distance of the race in kilometers
 
-    println("Starting the race!")
+    println("Starting the race!") // Print message indicating the start of the race
     runBlocking {
-        launch { race(MikesCar, raceDistance) }
-        launch { race(MyCar, raceDistance) }
+        launch { race(MikesCar, raceDistance) } // Launch a coroutine for Mike's car to participate in the race
+        launch { race(MyCar, raceDistance) } // Launch a coroutine for My's car to participate in the race
     }
-    println("Race finished!")
+    println("Race finished!") // Print message indicating the end of the race
+
 }
