@@ -1,3 +1,4 @@
+import kotlinx.coroutines.Job
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -11,10 +12,16 @@ class Vehicle {
     private var maxPermissibleWeight = 0
     private var speed: Double = 0.0
     private var maxSpeed: Double = 0.0
-    var distanceTraveled: Int = 0
+    var distanceTraveled: Double = 0.0
         private set
-    fun updateDistanceTraveled(distance: Int) {
-        distanceTraveled += distance
+    var raceDuration: Long = 0 // Zeit, die das Fahrzeug für das Rennen benötigt
+        private set
+    fun updateDistanceTraveled(distance: Job) : Double{
+        distanceTraveled += distance.toString().toDouble()
+        return distanceTraveled
+    }
+    fun updateRaceDuration(timeElapsed: Long) {
+        raceDuration = timeElapsed // Methode zum Aktualisieren der Rennzeit
     }
     constructor(
         id: Int,
@@ -70,5 +77,8 @@ class Vehicle {
 
     fun getWorkshop(postcode: Int): Workshop?{
         return workshops?.find { it.postcode == postcode }
+    }
+    fun getName():String{
+        return this.name
     }
 }

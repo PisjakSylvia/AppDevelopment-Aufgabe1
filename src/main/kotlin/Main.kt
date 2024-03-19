@@ -1,9 +1,5 @@
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import java.util.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.launch
-
 
 
 fun main(args: Array<String>) {
@@ -45,57 +41,82 @@ fun main(args: Array<String>) {
      * @param vehicle The vehicle participating in the race.
      * @param distance The distance of the race in kilometers.
      */
-    suspend fun race(vehicle: Vehicle, distance: Int) {
-        var traveledDistance = 0 // Variable to track the distance traveled by the vehicle
-        val random = Random() // Random number generator for randomizing actions
-        val randomBoolean = random.nextBoolean() // Random boolean value for alternating acceleration and braking
-        while (traveledDistance < distance) { // Continue racing until the vehicle has traveled the specified distance
-            val randomCallNumber = (3..5).random() // Random number of actions (acceleration or braking) to perform
-            repeat(randomCallNumber) { // Repeat the random number of actions
-                if (randomBoolean) { // If the random boolean value is true, accelerate the vehicle
+    suspend fun race(vehicle: Vehicle, distance: Int): Long {
+        var traveledDistance = 0 // Variable, um die zurückgelegte Strecke zu verfolgen
+        var timeElapsedMillis: Long = 0 // Variable, um die vergangene Zeit zu verfolgen
+        val startTime = System.currentTimeMillis() // Startzeit des Rennens
+
+        val random = java.util.Random() // Random-Objekt für zufällige Aktionen
+        val randomBoolean = random.nextBoolean() // Zufälliger Boolean-Wert für abwechselnde Beschleunigung und Bremsen
+
+        while (traveledDistance < distance) { // Rennen fortsetzen, bis das Fahrzeug die angegebene Strecke zurückgelegt hat
+            val randomCallNumber = (3..5).random() // Zufällige Anzahl von Aktionen (Beschleunigung oder Bremsen) festlegen
+            repeat(randomCallNumber) { // Wiederholen der zufälligen Anzahl von Aktionen
+                if (randomBoolean) { // Wenn der zufällige Boolean-Wert true ist, beschleunigen Sie das Fahrzeug
                     vehicle.accelerate()
-                } else { // Otherwise, brake the vehicle
+                } else { // Andernfalls bremsen Sie das Fahrzeug
                     vehicle.brake()
                 }
-                delay(100) // Introduce a delay of 100 milliseconds between actions
-            }
-            traveledDistance++ // Increment the traveled distance after each kilometer
+                // Verwendung von withContext, um delay innerhalb eines Coroutine-Scope aufzurufen
+                withContext(Dispatchers.Default) {
+                    delay(100)
+                }            }
+            traveledDistance++ // Nach jedem Kilometer die zurückgelegte Strecke inkrementieren
+            timeElapsedMillis = System.currentTimeMillis() - startTime // Aktualisieren der vergangenen Zeit
         }
+        vehicle.updateRaceDuration(timeElapsedMillis) // Aktualisierung der Rennzeit des Fahrzeugs
+
+        return timeElapsedMillis // Rückgabe der vergangenen Zeit, die das Fahrzeug benötigt hat, um die Strecke zurückzulegen
     }
 
-    val raceDistance = 5 // Distance of the race in kilometers
+
 
     println("Starting the race!") // Print message indicating the start of the race
 
-    // Starten der Rennen für vehicle1 und vehicle2 in separaten Coroutines
-    val start1 = GlobalScope.launch { race(MikesCar, raceDistance) }
-    val start2 = GlobalScope.launch { race(MyCar, raceDistance) }
+    // Starten der Rennen für Fahrzeug 1 und Fahrzeug 2 in separaten Coroutines
+    val startTime = System.currentTimeMillis() // Startzeit des Rennens
+    val raceDistance = 5 // Strecke des Rennens in Kilometern
+
+    val start1 = GlobalScope.launch { race(MikesCar, raceDistance)
+    println("Mike:" + race(MikesCar, raceDistance))
+    }
+    val start2 = GlobalScope.launch {
+        race(MyCar, raceDistance)
+        println("Me:" + race(MyCar, raceDistance))
+    }
+    val start3 = GlobalScope.launch { race(OtherVehicle, raceDistance)
+        println("Other:" + race(OtherVehicle, raceDistance))
+    }
 
     // Warten, bis beide Renn-Coroutines abgeschlossen sind
     runBlocking {
         start1.join()
         start2.join()
+        start3.join()
     }
 
-    // Bestimmen des Gewinners basierend auf der zurückgelegten Strecke
-    val winners = mutableListOf<Vehicle>()
-    val maxDistance = maxOf(MikesCar.distanceTraveled, MyCar.distanceTraveled)
-    if (MikesCar.distanceTraveled == maxDistance) {
-        winners.add(MikesCar)
-    }
-    if (MyCar.distanceTraveled == maxDistance) {
-        winners.add(MyCar)
+    val endTime = System.currentTimeMillis() // Endzeit des Rennens
+    val raceTimeMillis = endTime - startTime // Gesamtzeit des Rennens in Millisekunden
+
+    // Berechnen der durchschnittlichen Geschwindigkeit für jedes Fahrzeug (Geschwindigkeit = Strecke / Zeit)
+    val averageSpeedMikesCar = raceDistance.toDouble() / (MikesCar.raceDuration.toDouble() / 1000) // Umrechnung der Zeit in Sekunden
+    val averageSpeedMyCar = raceDistance.toDouble() / (MyCar.raceDuration.toDouble() / 1000) // Umrechnung der Zeit in Sekunden
+    val averageSpeedOtherVehicle = raceDistance.toDouble() / (OtherVehicle.raceDuration.toDouble() / 1000) // Umrechnung der Zeit in Sekunden
+
+    // Bestimmen des Gewinners basierend auf der durchschnittlichen Geschwindigkeit
+    val winner: Vehicle? = when {
+        averageSpeedMikesCar > averageSpeedMyCar && averageSpeedMikesCar > averageSpeedOtherVehicle -> MikesCar
+        averageSpeedMyCar > averageSpeedMikesCar && averageSpeedMyCar > averageSpeedOtherVehicle -> MyCar
+        averageSpeedOtherVehicle > averageSpeedMikesCar && averageSpeedOtherVehicle > averageSpeedMyCar -> OtherVehicle
+        else -> null // Unentschieden, kein klarer Gewinner
     }
 
-    // Ausgabe des Gewinners bzw. Gewinner bei Unentschieden
-    if (winners.size == 1) {
-        println("The winner is: ${winners[0].name}")
-    } else if (winners.size > 1) {
-        println("It's a tie between:")
-        winners.forEach { println(it.name) }
+    // Ausgabe des Gewinners bzw. Unentschieden
+    if (winner != null) {
+        println("The winner is: ${winner.getName()}. Average speed: ${winner.raceDuration.toDouble() / 1000} m/s")
     } else {
-        println("No winner. All vehicles failed to finish the race.")
+        println("It's a tie. Both vehicles have the same average speed.")
     }
-    println("Race finished!") // Print message indicating the end of the race
 
+    println("Race finished!") // Print message indicating the end of the race
 }
