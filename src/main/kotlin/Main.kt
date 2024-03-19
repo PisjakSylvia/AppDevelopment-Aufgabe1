@@ -1,3 +1,7 @@
+import java.util.*
+import kotlinx.coroutines.delay
+
+
 fun main(args: Array<String>) {
     val bmw = Brand("BME E90 318d", "Austria","0664 0000000","bmw@email.at")
     val suzuki = Brand("Suzuki Swift","Austria", "0664 1111111", "suzuki@gmail.com")
@@ -30,5 +34,21 @@ fun main(args: Array<String>) {
     } else {
         println("Workshop not found for postcode 9020.")
     }
-
+    suspend fun race(vehicle: Vehicle, distance: Int) {
+        var traveledDistance = 0
+        val random = Random()
+        val randomBoolean = random.nextBoolean()
+        while (traveledDistance < distance) {
+            val randomCallNumber = (3..5).random()
+            repeat(randomCallNumber) {
+                if (randomBoolean) {
+                    vehicle.accelerate()
+                } else {
+                    vehicle.brake()
+                }
+                kotlin.coroutines.delay(100) // Adjust the delay as needed (in milliseconds)
+            }
+            traveledDistance++
+        }
+    }
 }

@@ -1,6 +1,7 @@
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 class Vehicle {
     private var id = 0
     private var name =  ""
@@ -58,9 +59,6 @@ class Vehicle {
             println("Traveled 1 kilometer. Current speed: $speed")
         }
     }
-
-
-
 
     fun printInfo(){
         println("Vehicle(id=$id, name='$name', brand=$brand, workshops=$workshops, weight=$weight kg, maxPermissibleWeight=$maxPermissibleWeight kg, speed=$speed km/h, maxSpeed=$maxSpeed km/h)")
